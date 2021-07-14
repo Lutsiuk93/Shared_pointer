@@ -1,6 +1,6 @@
 #pragma once
 #include "Counter.h"
-#include <utility>
+#include <iostream>
 
 template <typename T>
 class Shared_Ptr
@@ -168,11 +168,6 @@ template <typename T, typename... Args>
 std::enable_if_t<!std::is_array<T>::value, Shared_Ptr<T>>
 make_shared(Args&&... args)
 	{
+	std::cout << "\ngeneric\n";
 	return Shared_Ptr<T>(new T(std::forward<Args>(args)...));
-	}
-
-template <typename T>
-Shared_Ptr<T> make_shared(std::size_t size)
-	{
-	return Shared_Ptr<T>(new T[size]());
 	}
