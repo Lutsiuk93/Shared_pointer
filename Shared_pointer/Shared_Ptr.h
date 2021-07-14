@@ -1,5 +1,6 @@
 #pragma once
 #include "Counter.h"
+#include <utility>
 
 template <typename T>
 class Shared_Ptr
@@ -24,7 +25,7 @@ class Shared_Ptr
 				}
 			}
 
-		Shared_Ptr(Shared_Ptr&& Sptr) : ptr(Sptr.ptr), counter(Sptr.counter) noexcept
+		Shared_Ptr(Shared_Ptr&& Sptr) : ptr(Sptr.ptr), counter(Sptr.counter)
 			{
 				Sptr.ptr = nullptr;
 				Sptr.counter = nullptr;
@@ -66,7 +67,7 @@ class Shared_Ptr
 
 			}
 
-		Shared_Ptr& operator= (Shared_Ptr&& Sptr)
+		Shared_Ptr& operator= (Shared_Ptr&& Sptr) noexcept
 			{
 			if (*Sptr == this)
 				{
@@ -155,3 +156,9 @@ class Shared_Ptr
 
 
 	};
+
+template <typename T, typename... Args>
+Shared_Ptr<T> make_shared(Args&&... args)
+	{
+	return Shared_Ptr<T>(new T(std::forward<Args>(args)...));
+	}

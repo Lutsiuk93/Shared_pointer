@@ -3,17 +3,7 @@
 
 int main()
 	{
-	int* a = new int(10);
-
-	Shared_Ptr<int> b = a;
-
-	Shared_Ptr<int> c = std::move(b);
-
-	std::cout << b << std::endl;
-
-	b = c;
-
-	std::cout << *b << " " << b.use_count();
-
+	Shared_Ptr<int> a = make_shared<int>(10);
+	std::cout << *a;
 	return 1;
 	}
