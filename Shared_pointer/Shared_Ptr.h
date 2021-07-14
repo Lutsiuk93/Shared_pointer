@@ -101,7 +101,14 @@ class Shared_Ptr
 
 		int use_count() const
 			{
-			return counter->getCount();
+			if (!unique())
+				{
+				return counter->getCount();
+				}
+			else
+				{
+				return 0;
+				}
 			}
 
 		void reset(T* Ptr)
@@ -141,7 +148,10 @@ class Shared_Ptr
 
 		T& operator* () const
 			{
-			return *ptr;
+			if (!unique())
+				{
+				return *ptr;
+				}
 			}
 
 		T* operator-> () const
