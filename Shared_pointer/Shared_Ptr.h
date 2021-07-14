@@ -169,3 +169,9 @@ Shared_Ptr<T> make_shared(Args&&... args)
 	{
 	return Shared_Ptr<T>(new T(std::forward<Args>(args)...));
 	}
+
+template <typename T>
+Shared_Ptr<T> make_shared(std::size_t size)
+	{
+	return Shared_Ptr<T>(new T[size]());
+	}

@@ -21,4 +21,6 @@ int main()
 	std::cout << "\nafter copy constructor : " << " | d : " << d << " | count d : " << d.use_count() << " | e : " << e << " | count e : " << e.use_count() << std::endl;
 
 	std::cout << "\nb = " << *b << " d = " << *d << " e = " << *e;
+
+	auto arr = make_shared<unsigned char>(10000);
 	}
