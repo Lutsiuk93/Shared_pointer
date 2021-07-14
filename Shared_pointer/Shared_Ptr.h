@@ -9,7 +9,7 @@ class Shared_Ptr
 		Counter* counter;
 
 	public:
-		Shared_Ptr() : ptr(nullptr), counter(new Counter)
+		Shared_Ptr() : ptr(nullptr), counter(nullptr)
 			{
 			}
 		Shared_Ptr(T* Ptr) : ptr(Ptr), counter(new Counter)
@@ -18,12 +18,16 @@ class Shared_Ptr
 
 		Shared_Ptr(const Shared_Ptr& Sptr) : ptr(Sptr.ptr), counter(Sptr.counter)
 			{
-			++* counter;
+			if (Sptr)
+				{
+				++* counter;
+				}
 			}
 
-		Shared_Ptr(Shared_Ptr&& Sptr) : ptr(Sptr.ptr), counter(Sptr.counter)
+		Shared_Ptr(Shared_Ptr&& Sptr) : ptr(Sptr.ptr), counter(Sptr.counter) noexcept
 			{
 				Sptr.ptr = nullptr;
+				Sptr.counter = nullptr;
 			}
 
 		Shared_Ptr& operator= (const Shared_Ptr& Sptr)
@@ -33,29 +37,30 @@ class Shared_Ptr
 				return *this;
 				}
 
-			delete ptr;
 			ptr = Sptr.ptr;
 			counter = Sptr.counter;
-			++*counter;
+
+			if (Sptr)
+				{
+				++* counter;
+				}
 
 			return *this;
 			}
 
 		Shared_Ptr& operator= (T* Ptr)
 			{
-			if (Ptr == ptr)
+			if (use_count == 1)
 				{
-				return *this;
+				delete ptr;
 				}
-
-			delete ptr;
-			ptr = Ptr;
-
-			if (use_count() > 1)
+			else
 				{
-				--*counter;
+				--* counter;
 				counter = new Counter;
 				}
+
+			ptr = Ptr;
 
 			return *this;
 
@@ -68,21 +73,26 @@ class Shared_Ptr
 				return *this;
 				}
 
-			delete ptr;
+			if (use_count == 1)
+				{
+				delete ptr;
+				}
 
 			ptr = Sptr.ptr;
-			Sptr.ptr = nullptr;
 			counter = Sptr.counter;
+			Sptr.ptr = nullptr;
+			Sptr.counter = nullptr;
 
 			}
+
 		~Shared_Ptr()
 			{
-			if (counter->getCount() == 1 && !unique())
+			if (!unique() && use_count() == 1)
 				{
 				delete ptr;
 				delete counter;
 				}
-			else
+			else if (!unique())
 				{
 				--* counter;
 				}
@@ -140,7 +150,7 @@ class Shared_Ptr
 
 		constexpr operator bool() const
 			{
-			return ptr == nullptr;
+			return !(ptr == nullptr);
 			}
 
 
