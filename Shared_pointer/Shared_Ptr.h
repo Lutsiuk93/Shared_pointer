@@ -25,7 +25,7 @@ class Shared_Ptr
 				}
 			}
 
-		Shared_Ptr(Shared_Ptr&& Sptr) : ptr(Sptr.ptr), counter(Sptr.counter)
+		Shared_Ptr(Shared_Ptr&& Sptr) noexcept : ptr(Sptr.ptr), counter(Sptr.counter)
 			{
 				Sptr.ptr = nullptr;
 				Sptr.counter = nullptr;
@@ -148,10 +148,7 @@ class Shared_Ptr
 
 		T& operator* () const
 			{
-			if (!unique())
-				{
-				return *ptr;
-				}
+			return *ptr;
 			}
 
 		T* operator-> () const
