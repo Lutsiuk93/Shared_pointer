@@ -22,5 +22,4 @@ int main()
 
 	std::cout << "\nb = " << *b << " d = " << *d << " e = " << *e;
 
-	auto arr = make_shared<unsigned char>(10000);
 	}

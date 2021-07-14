@@ -165,7 +165,8 @@ class Shared_Ptr
 	};
 
 template <typename T, typename... Args>
-Shared_Ptr<T> make_shared(Args&&... args)
+std::enable_if_t<!std::is_array<T>::value, Shared_Ptr<T>>
+make_shared(Args&&... args)
 	{
 	return Shared_Ptr<T>(new T(std::forward<Args>(args)...));
 	}
